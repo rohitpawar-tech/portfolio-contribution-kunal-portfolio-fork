@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="description" content="Modern Portfolio Showcase" />
+        <title>Shuvro | Creative Developer</title>
+        
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+        
+        <!-- Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+        <style>
+            /* -------------------------------------------------------------------------- */
+            /*                                 CORE VARIABLES                              */
+            /* -------------------------------------------------------------------------- */
+            :root {
+                --bg-dark: #0f0f13;
+                --bg-card: #1a1a24;
+                --text-main: #e0e0e0;
+                --text-muted: #a0a0a0;
+                --accent: #00d2ff; /* Cyan/Blue neon */
+                --accent-glow: rgba(0, 210, 255, 0.4);
+                --secondary: #7000ff; /* Purple */
+                --font-head: 'Montserrat', sans-serif;
+                --font-body: 'Poppins', sans-serif;
+                --nav-width: 80px;
+                --nav-expanded: 250px;
+                --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                outline: none;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: var(--font-body);
+                background-color: var(--bg-dark);
+                color: var(--text-main);
+                overflow: hidden; /* App-like feel */
+                height: 100vh;
+                width: 100vw;
+            }
+
+            a { text-decoration: none; color: inherit; transition: var(--transition); }
+            ul { list-style: none; }
+            img { max-width: 100%; display: block; }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                   LOADER                                    */
+            /* -------------------------------------------------------------------------- */
+            .loader {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: var(--bg-dark);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: opacity 0.8s ease;
+            }
+            .loader.remove { opacity: 0; pointer-events: none; }
+            
+            .c {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 20px var(--accent);
+            }
+            /* Loader Animation */
+            .c1 { animation: load1 2s infinite; }
+            .c2 { animation: load2 2s infinite; }
+            .c3 { animation: load3 2s infinite; }
+            .c4 { animation: load4 2s infinite; }
+            .c5 { animation: load5 2s infinite; }
+            .c6 { animation: load6 2s infinite; }
+
+            @keyframes load1 {
+                0% { transform: translate(0, 0); } 25% { transform: translate(50px, 50px); } 50% { transform: translate(0, 100px); } 75% { transform: translate(-50px, 50px); } 100% { transform: translate(0, 0); }
+            }
+            @keyframes load2 { 0% { transform: translate(0, 0) scale(0.5); } 100% { transform: translate(0, 0) scale(1.5); opacity: 0; } }
+            @keyframes load3 { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes load4 { 0% { transform: translate(0, 0); } 50% { transform: translate(40px, -40px); } 100% { transform: translate(0, 0); } }
+            @keyframes load5 { 0% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.5); } }
+            @keyframes load6 { 0% { transform: translateY(0); } 50% { transform: translateY(-30px); } 100% { transform: translateY(0); } }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                NAVIGATION                                  */
+            /* -------------------------------------------------------------------------- */
+            .hamburger {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 100;
+                cursor: pointer;
+                width: 30px;
+                height: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            .hamburger div {
+                width: 100%;
+                height: 3px;
+                background: var(--accent);
+                border-radius: 2px;
+                transition: var(--transition);
+            }
+
+            .navigation {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                width: var(--nav-expanded);
+                height: 100vh;
+                background: rgba(15, 15, 19, 0.95);
+                backdrop-filter: blur(10px);
+                z-index: 99;
+                padding: 100px 30px;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid rgba(255,255,255,0.1);
+                transition: var(--transition);
+            }
+            .navigation.active { left: 0; }
+            
+            .navigation h1 {
+                font-family: var(--font-head);
+                font-weight: 800;
+                font-size: 2rem;
+                color: #fff;
+                margin-bottom: 50px;
+                letter-spacing: 2px;
+                background: linear-gradient(45deg, var(--accent), var(--secondary));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .navigation ul li {
+                margin-bottom: 20px;
+                overflow: hidden;
+            }
+            .navigation ul li a {
+                font-size: 1.2rem;
+                font-weight: 500;
+                display: block;
+                position: relative;
+                padding-left: 10px;
+            }
+            .navigation ul li a::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 0;
+                height: 2px;
+                background: var(--accent);
+                transition: var(--transition);
+            }
+            .navigation ul li a:hover::before, .navigation ul li a.active-nav::before {
+                width: 100%;
+            }
+            .navigation ul li a:hover { color: var(--accent); padding-left: 20px; }
+
+            .navigation p {
+                margin-top: auto;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+            }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                 LAYOUT SYSTEM                               */
+            /* -------------------------------------------------------------------------- */
+            .container {
+                width: 100%;
+                height: 100vh;
+                position: relative;
+            }
+            .layer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.8s ease, visibility 0.8s ease;
+                overflow-y: auto; /* Allow scrolling within layers */
+                overflow-x: hidden;
+                padding: 40px;
+                padding-left: 80px; /* Space for closed nav hint */
+            }
+            .layer.active {
+                opacity: 1;
+                visibility: visible;
+                z-index: 1;
+            }
+            
+            /* Side Navigation (W buttons) */
+            .side-nav {
+                position: absolute;
+                right: 30px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                z-index: 10;
+            }
+            .side-nav button {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 2px solid rgba(255,255,255,0.2);
+                background: rgba(0,0,0,0.5);
+                color: #fff;
+                cursor: pointer;
+                font-family: var(--font-head);
+                font-weight: bold;
+                position: relative;
+                transition: var(--transition);
+            }
+            .side-nav button:hover {
+                background: var(--accent);
+                border-color: var(--accent);
+                transform: scale(1.1);
+            }
+            .side-nav .tooltip {
+                position: absolute;
+                right: 60px;
+                top: 50%;
+                transform: translateY(-50%) translateX(10px);
+                background: var(--bg-card);
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                opacity: 0;
+                white-space: nowrap;
+                pointer-events: none;
+                transition: var(--transition);
+            }
+            .side-nav button:hover .tooltip {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0);
+            }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                  HOME                                      */
+            /* -------------------------------------------------------------------------- */
+            .home {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                position: relative;
+            }
+            .canvas_container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+            .content-for-home {
+                text-align: center;
+                z-index: 2;
+                background: rgba(0,0,0,0.3);
+                padding: 40px;
+                border-radius: 20px;
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(255,255,255,0.1);
+                animation: fadeInUp 1s ease forwards;
+            }
+            .content-for-home h1 {
+                font-family: var(--font-head);
+                font-size: 3rem;
+                margin-bottom: 20px;
+                line-height: 1.2;
+            }
+            .content-for-home span { color: var(--accent); }
+            .social-icons {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+            .s-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+                cursor: pointer;
+            }
+            .s-icon:hover {
+                background: var(--accent);
+                transform: translateY(-5px);
+            }
+            .s-name {
+                position: absolute;
+                bottom: -25px;
+                font-size: 0.8rem;
+                opacity: 0;
+                transition: var(--transition);
+            }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                  ABOUT                                     */
+            /* -------------------------------------------------------------------------- */
+            .about .wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 50px;
+                margin-bottom: 80px;
+                padding-top: 50px;
+            }
+            .face {
+                background: var(--bg-card);
+                padding: 40px;
+                border-radius: 15px;
+                position: relative;
+                overflow: hidden;
+            }
+            .face::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; width: 5px; height: 100%;
+                background: var(--accent);
+            }
+            .face h1 { font-size: 2.5rem; margin: 15px 0; color: #fff; }
+            .text { color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; }
+            
+            .button {
+                display: inline-block;
+                padding: 12px 30px;
+                border-radius: 30px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: var(--transition);
+                border: none;
+            }
+            .button.download {
+                background: transparent;
+                border: 2px solid var(--accent);
+                color: var(--accent);
+                margin-right: 15px;
+            }
+            .button.download:hover { background: var(--accent); color: #000; }
+            .button.hire {
+                background: var(--accent);
+                color: #000;
+            }
+            .button.hire:hover { box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-3px); }
+
+            .face2 {
+                background-image: url('https://picsum.photos/seed/shuvro/600/400');
+                background-size: cover;
+                background-position: center;
+                border-radius: 15px;
+            }
+
+            .about_nav {
+                margin-bottom: 40px;
+                display: flex;
+                gap: 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                padding-bottom: 10px;
+            }
+            .about_nav a {
+                font-size: 1.2rem;
+                color: var(--text-muted);
+                cursor: pointer;
+                position: relative;
+            }
+            .about_nav a.active { color: #fff; }
+            .about_nav a.active::after {
+                content: '';
+                position: absolute;
+                bottom: -11px; left: 0; width: 100%; height: 3px;
+                background: var(--accent);
+            }
+
+            /* Skills */
+            .skills-container { max-width: 800px; }
+            .skill { margin-bottom: 20px; }
+            .name { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            .percent {
+                width: 100%;
+                height: 8px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .progress {
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent), var(--secondary));
+                width: 0; /* Animate via JS */
+                transition: width 1.5s ease-out;
+            }
+
+            /* Experience */
+            .experience, .education {
+                position: relative;
+                padding-left: 30px;
+                border-left: 2px solid rgba(255,255,255,0.1);
+            }
+            .cover {
+                position: relative;
+                margin-bottom: 40px;
+            }
+            .cover::before {
+                content: '';
+                position: absolute;
+                left: -36px; top: 5px;
+                width: 14px; height: 14px;
+                background: var(--bg-dark);
+                border: 2px solid var(--accent);
+                border-radius: 50%;
+            }
+            .cover h2 { font-size: 1.5rem; color: #fff; }
+            .date, .name_company { color: var(--accent); font-size: 0.9rem; margin-bottom: 10px; display: block;}
+            .text_hidden { color: var(--text-muted); line-height: 1.5; }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                SERVICES                                    */
+            /* -------------------------------------------------------------------------- */
+            .hero { text-align: center; margin-bottom: 80px; padding-top: 40px; }
+            .hero .typography { font-size: 3rem; font-weight: 800; margin-bottom: 20px; font-family: var(--font-head); }
+            .hero .typography span.t-box { color: var(--accent); }
+            
+            .capabilities-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+                margin-bottom: 80px;
+            }
+            .capability-card {
+                background: var(--bg-card);
+                border-radius: 15px;
+                overflow: hidden;
+                transition: var(--transition);
+                border: 1px solid rgba(255,255,255,0.05);
+            }
+            .capability-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: var(--accent); }
+            .capability-card img { width: 100%; height: 200px; object-fit: cover; filter: grayscale(100%); transition: var(--transition); }
+            .capability-card:hover img { filter: grayscale(0%); }
+            .c_content { padding: 25px; }
+            .c_title { font-size: 1.5rem; font-weight: 700; color: var(--accent); display: block; margin-bottom: 15px; }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                 PORTFOLIO                                  */
+            /* -------------------------------------------------------------------------- */
+            .about_nav ul { display: flex; gap: 15px; flex-wrap: wrap; }
+            .about_nav li button {
+                background: transparent;
+                border: 1px solid var(--text-muted);
+                color: var(--text-muted);
+                padding: 8px 20px;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            .about_nav li button.active, .about_nav li button:hover {
+                border-color: var(--accent);
+                color: var(--accent);
+                background: rgba(0, 210, 255, 0.1);
+            }
+
+            .mymixcont {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+                padding-bottom: 50px;
+            }
+            .mix {
+                position: relative;
+                border-radius: 10px;
+                overflow: hidden;
+                aspect-ratio: 4/3;
+                cursor: pointer;
+            }
+            .mix img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+            .mix:hover img { transform: scale(1.1); }
+            .port_overlay {
+                position: absolute;
+                bottom: 0; left: 0; width: 100%;
+                background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+                padding: 20px;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: var(--transition);
+            }
+            .mix:hover .port_overlay { transform: translateY(0); opacity: 1; }
+            .title { color: #fff; font-weight: 600; display: block; }
+            .port_link { color: var(--accent); font-size: 0.9rem; }
+
+            /* -------------------------------------------------------------------------- */
+            /*                                 COMMENTS                                   */
+            /* -------------------------------------------------------------------------- */
+            .testimonial { max-width: 800px; margin: 0 auto; text-align: center; padding-top: 40px; }
+            .testimonial h1 { font-size: 2.5rem; margin-bottom: 50px; font-family: var(--font-head); }
+            .swiper-slide {
+                background: var(--bg-card);
+                padding: 40px;
+                border-radius: 15px;
+                border: 1px solid rgba(255,255,255,0.05);
+            }
+            .swiper-slide img {
+                width: 80px; height: 80px;
+                border-radius: 50%;
+                margin: 0 auto 20px;
+                border: 3px solid var(--accent);
+            }
+            .rating { color: gold; margin-bottom: 15px; }
+        </style>
+    </head>
+    <body onload="loaded()">
+        <!-- LOADER -->
+<div class="loader">
+    <h2 class="loader-text">Kunal Kumbhar</h2>
+    <p class="loader-sub">Loading Portfolio...</p>
+
+    <div class="c c1"></div>
+    <div class="c c2"></div>
+    <div class="c c3"></div>
+    <div class="c c4"></div>
+    <div class="c c5"></div>
+    <div class="c c6"></div>
+</div>
+
+        <script>
+            let loader = document.querySelector(".loader");
+            function loaded() {
+                loader.classList.add("remove");
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    // Trigger Home animation
+                    animateHome();
+                }, 800);
+            }
+        </script>
+
+        <!-- HAMBURGER -->
+        <div class="hamburger" onclick="toggleNav()">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav class="navigation" id="mainNav">
+            <h1>Kunal.</h1>
+            <ul>
+                <li><a href="#" onclick="switchLayer('home', this)" class="active-nav">Home</a></li>
+                <li><a href="#" onclick="switchLayer('about', this)">About</a></li>
+                <li><a href="#" onclick="switchLayer('services', this)">Services</a></li>
+                <li><a href="#" onclick="switchLayer('portfolio', this)">Portfolio</a></li>
+                <li><a href="#" onclick="switchLayer('comments', this)">Comments</a></li>
+                <li><a href="#" onclick="switchLayer('contact', this)">Contact</a></li>
+            </ul>
+            <p>
+                <p>
+  &copy; <span id="year"></span>
+  <a href="https://github.com/kumbharkunal59-cell" target="_blank">
+    Kunal Kumbhar
+  </a>.
+</p>
+</nav>
+    <!-- LAYER 1: HOME -->
+            <div class="layer layer1 active" id="home">
+                <div class="home main">
+                    <div class="canvas_container">
+                        <canvas id="heroCanvas"></canvas>
+                    </div>
+                    <div class="content-for-home">
+                        <h1>Kunal Kumbha
+                             <span><br>Kunal</span></h1>
+                        <p style="margin-bottom: 30px; font-size: 1.2rem;">Creative Developer & Designer</p>
+                        <div class="social-icons">
+                            <a href="#" class="s-icon"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="s-icon"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="s-icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="s-icon"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Side Navigation Buttons -->
+                    <div class="side-nav">
+                        <button onclick="switchLayer('about')"><span>?</span><span class="tooltip">Why You?</span></button>
+                        <button onclick="switchLayer('services')"><span>!</span><span class="tooltip">Services?</span></button>
+                        <button onclick="switchLayer('portfolio')"><span>W</span><span class="tooltip">Works?</span></button>
+                        <button onclick="switchLayer('comments')"><span>S</span><span class="tooltip">Say?</span></button>
+                        <button onclick="switchLayer('contact')"><span>@</span><span class="tooltip">Where?</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAYER 2: ABOUT -->
+            <div class="layer layer2" id="about">
+                <div class="about main">
+                    <div class="wrapper">
+                        <div class="face face1">
+                            <p>Hello,</p>
+                            <h1>I'm Kunal</h1>
+                            <p class="text">
+                                I am a Web Developer, and I'm very passionate and dedicated to my work. With 10 years experience as a professional Web Developer, I have acquired the skills and knowledge necessary to make your project a success.
+                            </p>
+                            <a class="button download" href="https://drive.google.com/file/d/1T2U-Str8b6YxMKTAZjy_fEukaoH0uw0v/view?usp=sharing" download>Download CV</a>
+                            <button class="button hire" onclick="switchLayer('contact')">Hire Me</button>
+                        </div>
+                        <div class="face face2"></div>
+                    </div>
+
+                    <nav class="about_nav">
+                        <ul>
+                            <li><a onclick="toggleAboutTab('skills', this)" class="active">Skills</a></li>
+                            <li><a onclick="toggleAboutTab('experience', this)">Experience</a></li>
+                            <li><a onclick="toggleAboutTab('education', this)">Education</a></li>
+                        </ul>
+                    </nav>
+
+                    <div class="about_container">
+                        <!-- Skills Section -->
+                        <div id="skills" class="about-section skills-container">
+                            <div class="skill"><div class="name"><span>HTML5</span><span>90%</span></div><div class="percent"><div class="progress" style="width: 90%"></div></div></div>
+                            <div class="skill"><div class="name"><span>CSS3</span><span>85%</span></div><div class="percent"><div class="progress" style="width: 85%"></div></div></div>
+                            <div class="skill"><div class="name"><span>JavaScript</span><span>75%</span></div><div class="percent"><div class="progress" style="width: 75%"></div></div></div>
+                            <div class="skill"><div class="name"><span>PHP</span><span>60%</span></div><div class="percent"><div class="progress" style="width: 60%"></div></div></div>
+                            <div class="skill"><div class="name"><span>React</span><span>80%</span></div><div class="percent"><div class="progress" style="width: 80%"></div></div></div>
+                        </div>
+
+                      <!-- Experience Section -->
+<div id="experience" class="about-section" style="display:none;">
+    <div class="experience">
+        <div class="cover">
+            <i class="date">Aug 2024 - Present</i>
+            <h2>Web Developer</h2>
+            <i class="name_company">Cognify</i>
+            <article class="text_hidden">
+                Working on web development projects, building responsive and interactive websites.
+            </article>
+        </div> <!-- cover -->
+    </div> <!-- experience -->
+</div> <!-- about-section -->
+
+
+<!-- Education Section -->
+<div id="education" class="about-section" style="display:none;">
+    <div class="education">
+        <div class="cover">
+            <i class="date">2024 - 2027</i>
+            <h2>B.Sc Computer Science (CS + AIML + VR)</h2>
+            <i class="name_company">Sandip University</i>
+        </div>
+    </div>
+</div>
+            <!-- LAYER 3: SERVICES -->
+            <div class="layer layer3" id="services">
+                <div class="services main">
+                    <div class="hero">
+                        <div class="typography">
+                            <span class="t_dummy">We know how to</span> <br />
+                            <span class="t-box">be innovative</span>
+                        </div>
+                        <p class="hero-text">Kunal is an excellent web designer and faultless technician. He’s a pleasure to work with.</p>
+                    </div>
+                    
+                   <div class="capabilities-grid">
+    <div class="capability-card">
+        <img src="https://picsum.photos/seed/web/600/400" alt="Web">
+        <div class="c_content">
+            <span class="c_title">Web Development</span>
+            <p class="text">Custom websites built with modern technologies like React, Vue, and Node.js ensuring high performance.</p>
+            <br>
+            <a href="#" style="color:var(--accent)">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+    <!-- Add more cards below -->
+    <div class="capability-card">
+        <img src="https://picsum.photos/seed/app/600/400" alt="App">
+        <div class="c_content">
+            <span class="c_title">App Development</span>
+            <p class="text">Mobile applications for Android and iOS, built with Flutter and React Native for smooth UX.</p>
+            <br>
+            <a href="#" style="color:var(--accent)">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+
+                        </div>
+                        <div class="capability-card">
+                            <img src="https://picsum.photos/seed/graphics/600/400" alt="Graphics">
+                            <div class="c_content">
+                                <span class="c_title">UI/UX Design</span>
+                                <p class="text">Crafting intuitive and engaging user experiences with a focus on accessibility and aesthetics.</p>
+                                <br>
+                                <a href="#" style="color:var(--accent)">Learn More <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="capability-card">
+                            <img src="https://picsum.photos/seed/seo/600/400" alt="SEO">
+                            <div class="c_content">
+                                <span class="c_title">SEO Optimization</span>
+                                <p class="text">Data-driven strategies to improve your search ranking and drive organic traffic to your site.</p>
+                                <br>
+                                <a href="#" style="color:var(--accent)">Learn More <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           <!-- LAYER 4: PORTFOLIO -->
+<div class="layer layer4" id="portfolio">
+    <div class="portfolio main">
+        <div class="hero">
+            <h1>Recent Works</h1>
+            <p>A selection of my favorite projects.</p>
+        </div>
+        
+        <nav class="about_nav">
+            <ul>
+                <li><button class="filter active" onclick="filterPortfolio('all', this)">All</button></li>
+                <li><button class="filter" onclick="filterPortfolio('web', this)">Web</button></li>
+                <li><button class="filter" onclick="filterPortfolio('app', this)">Apps</button></li>
+                <li><button class="filter" onclick="filterPortfolio('design', this)">Design</button></li>
+            </ul>
+        </nav>
+
+        <div class="mymixcont">
+            <!-- Example Web Project -->
+            <div class="mix web">
+    <img src="https://picsum.photos/seed/project1/400/300" alt="Portfolio Project">
+    <div class="port_overlay">
+        <span class="title">Portfolio Website</span>
+        <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+    </div>
+</div>
+
+            <!-- Example App Project -->
+            <div class="mix app">
+                <img src="https://picsum.photos/seed/project2/400/300" alt="Portfolio Project">
+                <div class="port_overlay">
+                    <span class="title">Weather App</span>
+                    <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+                </div>
+            </div>
+
+            <!-- Example Design Project -->
+            <div class="mix design">
+                <img src="https://picsum.photos/seed/project3/400/300" alt="Portfolio Project">
+                <div class="port_overlay">
+                    <span class="title">Brand Identity</span>
+                    <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+                </div>
+            </div>
+
+            <!-- Another Web Project -->
+            <div class="mix web">
+                <img src="https://picsum.photos/seed/project4/400/300" alt="Portfolio Project">
+                <div class="port_overlay">
+                    <span class="title">Student Guide</span>
+                    <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+                </div>
+            </div>
+
+            <!-- Another App Project -->
+            <div class="mix app">
+                <img src="https://picsum.photos/seed/project5/400/300" alt="Portfolio Project">
+                <div class="port_overlay">
+                    <span class="title">Profile World</span>
+                    <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+                </div>
+            </div>
+
+            <!-- Another Design Project -->
+            <div class="mix design">
+                <img src="https://picsum.photos/seed/project6/400/300" alt="Portfolio Project">
+                <div class="port_overlay">
+                    <span class="title">Art Director</span>
+                    <a href="https://github.com/kumbharkunal59-cell" target="_blank" class="port_link">View Project</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- LAYER 5: COMMENTS -->
+            <div class="layer layer5" id="comments">
+                <div class="testimonial">
+                    <h1>What Clients Say</h1>
+                    <!-- Swiper -->
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="https://picsum.photos/seed/u1/100/100" alt="Client">
+                                <h4>Erik Lasher</h4>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <p>“Kunal  is an excellent web designer and faultless technician. He’s a pleasure to work with.”</p>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://picsum.photos/seed/u2/100/100" alt="Client">
+                                <h4>Sarah Johnson</h4>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <p>“Great value for money and will always go the extra mile when necessary. Highly recommended!”</p>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://picsum.photos/seed/u3/100/100" alt="Client">
+                                <h4>Michael Chen</h4>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <p>“The attention to detail in the animations was stunning. Our users love the new site.”</p>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAYER 6: CONTACT -->
+            <div class="layer layer6" id="contact">
+
+                <div class="contact_us" style="max-width: 1000px; margin: 0 auto;">
+                    <div class="hero">
+                        <h1>Get In Touch</h1>
+                        <p>Have a project in mind? Let's talk.</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+                        <!-- Info -->
+                        <div class="info_container">
+                            <div class="info" style="background: var(--bg-card); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                                <i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 10px;"></i>
+                                <span class="iname">Phone</span><br>
+                                <a href="tel:+8800000000000">+918766733004</a>
+                            </div>
+                            <div class="info" style="background: var(--bg-card); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                                <i class="fas fa-home" style="color: var(--accent); margin-right: 10px;"></i>
+                                <span class="iname">Address</span><br>
+                                <span>Nashik , Maharashtra , India</span>
+                            </div>
+                            <div class="info" style="background: var(--bg-card); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                                <i class="fas fa-envelope" style="color: var(--accent); margin-right: 10px;"></i>
+                                <span class="iname">Email</span><br>
+                                <a href="mailto:shuvro@gmail.com">kumbharkunal59@gmail.com</a>
+                            </div>
+                            <!-- Map Placeholder (Using a styled image/div instead of API heavy map) -->
+                            <div style="width: 100%; height: 200px; background: #333; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #777;">
+                                <i class="fas fa-map-marked-alt fa-3x"></i>
+                            </div>
+                        </div>
+
+                        <!-- Form -->
+                        <form id="contactForm" onsubmit="handleContact(event)">
+                            <div class="inp_field" style="margin-bottom: 20px;">
+                                <input type="text" name="name" class="fname" placeholder="Full Name" required 
+                                    style="width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid #333; color: #fff; border-radius: 5px;">
+                            </div>
+                            <div class="inp_field" style="margin-bottom: 20px;">
+                                <input type="email" name="email" class="email" placeholder="Email" required 
+                                    style="width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid #333; color: #fff; border-radius: 5px;">
+                            </div>
+                            <div class="inp_field" style="margin-bottom: 20px;">
+                                <input type="text" name="subject" class="subject" placeholder="Subject" required 
+                                    style="width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid #333; color: #fff; border-radius: 5px;">
+                            </div>
+                            <textarea name="message" cols="30" rows="5" class="message" placeholder="Message" required 
+                                style="width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 20px;"></textarea>
+                            <button class="submit button hire" style="width: 100%; border: none;">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+        <!-- Logic -->
+        <script>
+            /* --- Navigation Logic --- */
+            function toggleNav() {
+                document.querySelector('.navigation').classList.toggle('active');
+            }
+
+            function switchLayer(layerId, navElement = null) {
+                // Hide all layers
+                document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+                // Show target
+                document.getElementById(layerId).classList.add('active');
+                
+                // Update Nav Active State
+                if(navElement) {
+                    document.querySelectorAll('.navigation ul li a').forEach(a => a.classList.remove('active-nav'));
+                    navElement.classList.add('active-nav');
+                }
+
+                // Mobile: Close menu after click
+                if(window.innerWidth < 768) {
+                    document.querySelector('.navigation').classList.remove('active');
+                }
+
+                // Trigger specific animations
+                if(layerId === 'home') animateHome();
+                if(layerId === 'about') animateSkills();
+            }
+
+            /* --- About Tabs --- */
+            function toggleAboutTab(tabId, element) {
+                document.querySelectorAll('.about_section').forEach(s => s.style.display = 'none');
+                document.getElementById(tabId).style.display = 'block';
+                
+                document.querySelectorAll('.about_nav a').forEach(a => a.classList.remove('active'));
+                element.classList.add('active');
+            }
+
+            /* --- Portfolio Filter --- */
+            function filterPortfolio(category, btn) {
+                document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.querySelectorAll('.mix').forEach(item => {
+                    if (category === 'all' || item.classList.contains(category)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            /* --- Animations (Anime.js) --- */
+            function animateHome() {
+                anime({
+                    targets: '.content-for-home',
+                    opacity: [0, 1],
+                    translateY: [50, 0],
+                    easing: 'easeOutExpo',
+                    duration: 1500
+                });
+            }
+
+            function animateSkills() {
+                anime({
+                    targets: '.progress',
+                    width: el => el.getAttribute('style').split(':')[1], // Get value from inline style
+                    easing: 'easeInOutQuad',
+                    duration: 2000,
+                    delay: anime.stagger(200)
+                });
+            }
+
+            /* --- Canvas Animation (Particles) --- */
+            const canvas = document.getElementById('heroCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particlesArray;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                    if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+                }
+                draw() {
+                    ctx.fillStyle = '#00d2ff';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particlesArray = [];
+                for (let i = 0; i < 50; i++) particlesArray.push(new Particle());
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                    // Connect particles
+                    for (let j = i; j < particlesArray.length; j++) {
+                        const dx = particlesArray[i].x - particlesArray[j].x;
+                        const dy = particlesArray[i].y - particlesArray[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 210, 255, ${1 - distance/150})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+
+            initParticles();
+            animateParticles();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            });
+
+            /* --- Swiper Init --- */
+            var swiper = new Swiper(".mySwiper", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: { el: ".swiper-pagination", clickable: true },
+                autoplay: { delay: 5000 },
+            });
+
+            /* --- Contact Form Simulation --- */
+            function handleContact(e) {
+                e.preventDefault();
+                const btn = document.querySelector('.submit');
+                const originalText = btn.innerText;
+                
+                btn.innerText = 'Sending...';
+                
+                // Simulate delay
+                setTimeout(() => {
+                    btn.innerText = 'Message Sent!';
+                    btn.style.background = '#28a745';
+                    document.getElementById('contactForm').reset();
+                    
+                    // Create simple toast
+                    const toast = document.createElement('div');
+                    toast.innerText = 'Thanks for reaching out! I will get back to you soon.';
+                    toast.style.position = 'fixed';
+                    toast.style.bottom = '20px';
+                    toast.style.right = '20px';
+                    toast.style.background = '#fff';
+                    toast.style.color = '#000';
+                    toast.style.padding = '15px 25px';
+                    toast.style.borderRadius = '5px';
+                    toast.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+                    toast.style.zIndex = '10000';
+                    document.body.appendChild(toast);
+
+                    setTimeout(() => {
+                        toast.remove();
+                        btn.innerText = originalText;
+                        btn.style.background = ''; // Reset to CSS default
+                    }, 3000);
+                }, 1500);
+            }
+        </script>
+    </body>
+</html>
