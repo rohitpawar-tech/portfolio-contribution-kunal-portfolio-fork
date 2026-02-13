@@ -41,3 +41,20 @@ portfolio/
 1. Clone the repository:
 
 
+
+2. Open `index.html` in your browser.
+
+---
+
+## 📸 Screenshots
+
+(Add screenshots here later)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create your feature branch  
