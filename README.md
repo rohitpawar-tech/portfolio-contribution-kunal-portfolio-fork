@@ -27,4 +27,8 @@ A modern and interactive personal portfolio website built using HTML, CSS, and J
 ---
 
 ## 📂 Project Structure
-
+portfolio/
+│── index.html
+│── assets/
+│── styles/
+│── scripts/
