@@ -60,5 +60,27 @@ Contributions are welcome!
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch  
+5. Open a Pull Request
 
+---
+
+## 📬 Contact
+
+- 📧 Email: kumbharkunal59@gmail.com
+- 🌐 GitHub: https://github.com/kumbharkunal59-cell
+
+---
+
+## 📜 License
+
+This project is open source and available under the MIT License.
+
+---
+
+### ⭐ If you like this project, give it a star!
+
+
+Contribution By : Rohit Pawar 
+Github 
+Email: pawarrohit.x@gmail.com 
 
