@@ -32,3 +32,12 @@ portfolio/
 │── assets/
 │── styles/
 │── scripts/
+
+
+---
+
+## 🚀 How to Run Locally
+
+1. Clone the repository:
+
+
